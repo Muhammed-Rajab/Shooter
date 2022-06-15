@@ -8,8 +8,11 @@ export default class ParticleGroup {
         this.particleArray = [];
 
         // Explode particle property
-        this.particleSize = 2.5;
+        this.minParticleSize = 0.5;
+        this.maxParticleSize = 3.5;
         this.particleCount = 8;
+        this.minParticleMagnitude = 0.5;
+        this.maxParticleMagnitude = 3;
     }
 
     getparticlesArray() {
@@ -23,9 +26,18 @@ export default class ParticleGroup {
             const p = new Particle(
                 projectile.position.getX(),
                 projectile.position.getY(),
-                1,
+                Math.floor(
+                    Math.random() *
+                        (this.maxParticleMagnitude -
+                            this.minParticleMagnitude) +
+                        this.minParticleMagnitude
+                ),
                 Math.random() * Math.PI * 2,
-                this.particleSize,
+                Math.floor(
+                    Math.random() *
+                        (this.maxParticleSize - this.minParticleSize) +
+                        this.minParticleSize
+                ),
                 enemy.color,
                 this.ctx
             );
