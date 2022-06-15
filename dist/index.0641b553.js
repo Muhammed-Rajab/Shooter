@@ -555,7 +555,7 @@ function spawnEnemies() {
         enemyX = Math.random() * canvas.width;
         enemyY = Math.random() < 0.5 ? 0 - enemyRadius : canvas.height + enemyRadius;
     }
-    const enemySpeed = 0.15;
+    const enemySpeed = 0.5;
     const enemyAngle = Math.atan2(canvas.height / 2 - enemyY, canvas.width / 2 - enemyX);
     const enemy = new (0, _enemyDefault.default)(enemyX, enemyY, enemySpeed, enemyAngle, enemyRadius, ctx);
     enemyArray.push(enemy);
@@ -569,10 +569,18 @@ function manageProjectiles() {
         projectile.draw();
     });
 }
+function enemyHitHero(enemy) {
+    const dist = Math.hypot(hero.position.getX() - enemy.position.getX(), hero.position.getY() - enemy.position.getY());
+    return dist - hero.radius - enemy.radius < 1;
+}
 function manageEnemies() {
     enemyArray.forEach((enemy, enemyIdx)=>{
         enemy.update();
         enemy.draw();
+        if (enemyHitHero(enemy)) {
+            console.log("Hit the player");
+            cancelAnimationFrame(animationFrameRequestId);
+        }
         projectileArray.forEach((projectile, projectileIdx)=>{
             const dist = Math.hypot(projectile.position.getX() - enemy.position.getX(), projectile.position.getY() - enemy.position.getY());
             // console.log(dist);
@@ -587,7 +595,9 @@ function manageEnemies() {
     });
 }
 // * Game loop
+let animationFrameRequestId = undefined;
 function gameLoop() {
+    animationFrameRequestId = requestAnimationFrame(gameLoop);
     // Clearing
     clearCanvas();
     // Drawing
@@ -597,8 +607,7 @@ function gameLoop() {
     // Drawing and Updating
     manageProjectiles();
     manageEnemies();
-    // Collision
-    requestAnimationFrame(gameLoop);
+// Collision
 }
 gameLoop();
 
