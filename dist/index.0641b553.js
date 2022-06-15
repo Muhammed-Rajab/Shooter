@@ -506,10 +506,12 @@ function hmrAcceptRun(bundle, id) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _hero = require("./modules/Hero");
 var _heroDefault = parcelHelpers.interopDefault(_hero);
-var _particle = require("./modules/Particle");
-var _particleDefault = parcelHelpers.interopDefault(_particle);
 var _vector = require("./modules/Vector");
 var _vectorDefault = parcelHelpers.interopDefault(_vector);
+var _particle = require("./modules/Particle");
+var _particleDefault = parcelHelpers.interopDefault(_particle);
+var _projectile = require("./modules/Projectile");
+var _projectileDefault = parcelHelpers.interopDefault(_projectile);
 // * Canvas Setup
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
@@ -520,14 +522,32 @@ const updateCanvasDimension = ()=>{
 };
 updateCanvasDimension();
 const clearCanvas = ()=>{
-    ctx.fillStyle = "#121212";
+    ctx.fillStyle = "rgb(18 18 18 / 30%)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 /*
  * ----------------- Code Starts Here ------------------
  */ // * Variables
-const hero = new (0, _heroDefault.default)(50, 50, 25, ctx);
+const hero = new (0, _heroDefault.default)(canvas.width / 2, canvas.height / 2, 25, ctx);
+const projectileArray = [];
+const enemyArray = [];
+// * Event listeners
+canvas.addEventListener("click", (e)=>{
+    const { clientX: mouseX , clientY: mouseY  } = e;
+    const projectileX = canvas.width / 2;
+    const projectileY = canvas.height / 2;
+    const angleOfProjectile = Math.atan2(mouseY - projectileY, mouseX - projectileX);
+    console.log(angleOfProjectile * (180 / Math.PI));
+    const projectile = new (0, _projectileDefault.default)(projectileX, projectileY, 3, angleOfProjectile, ctx);
+    projectileArray.push(projectile);
+});
 // * Functions
+function manageProjectiles() {
+    projectileArray.forEach((projectile)=>{
+        projectile.update();
+        projectile.draw();
+    });
+}
 // * Game loop
 function gameLoop() {
     // Clearing
@@ -535,12 +555,54 @@ function gameLoop() {
     // Drawing
     hero.draw();
     // Updating
+    hero.update();
+    // Drawing and Updating
+    manageProjectiles();
     // Collision
     requestAnimationFrame(gameLoop);
 }
 gameLoop();
 
-},{"./modules/Vector":"cMjxv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modules/Hero":"iOjoF","./modules/Particle":"izY9t"}],"cMjxv":[function(require,module,exports) {
+},{"./modules/Hero":"iOjoF","./modules/Particle":"izY9t","./modules/Vector":"cMjxv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modules/Projectile":"7CeSo"}],"iOjoF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _particle = require("./Particle");
+var _particleDefault = parcelHelpers.interopDefault(_particle);
+class Player extends (0, _particleDefault.default) {
+    constructor(x, y, radius, ctx){
+        super(x, y, 0, 0, radius, "white", ctx);
+    }
+}
+exports.default = Player;
+
+},{"./Particle":"izY9t","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"izY9t":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _vector = require("./Vector");
+var _vectorDefault = parcelHelpers.interopDefault(_vector);
+class Particle {
+    constructor(x, y, magnitude, direction, radius, color, ctx){
+        this.position = new (0, _vectorDefault.default)(x, y);
+        this.radius = radius;
+        this.color = color;
+        this.ctx = ctx;
+        this.velocity = new (0, _vectorDefault.default)(0, 0);
+        this.velocity.setLength(magnitude ?? 0);
+        this.velocity.setAngleRad(direction ?? 0);
+    }
+    draw() {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.color;
+        this.ctx.arc(this.position.getX(), this.position.getY(), this.radius, 0, Math.PI * 2, false);
+        this.ctx.fill();
+    }
+    update() {
+        this.position.addTo(this.velocity);
+    }
+}
+exports.default = Particle;
+
+},{"./Vector":"cMjxv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cMjxv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Vector {
@@ -556,19 +618,51 @@ class Vector {
     getY() {
         return this.#y;
     }
+    getLength() {
+        return Math.sqrt(this.#x * this.#x + this.#y * this.#y);
+    }
+    getAngleRad() {
+        return Math.atan2(this.#y, this.#x);
+    }
+    getAngleDeg() {
+        return this.getAngleRad() * (180 / Math.PI);
+    }
     setX(x) {
         this.#x = x;
     }
     setY(y) {
         this.#y = y;
     }
-    setAngleRad(rad) {}
-    setAngleDeg(deg) {}
-    setLength(l) {}
-    addTo(v) {}
-    subtractFrom(v) {}
-    multiplyBy(v) {}
-    divideBy(v) {}
+    setAngleRad(rad) {
+        const length = this.getLength();
+        this.#x = length * Math.cos(rad);
+        this.#y = length * Math.sin(rad);
+    }
+    setAngleDeg(deg) {
+        const rad = deg * (Math.PI / 180);
+        this.setAngleRad(rad);
+    }
+    setLength(l) {
+        const angle = this.getAngleRad();
+        this.#x = l * Math.cos(angle);
+        this.#y = l * Math.sin(angle);
+    }
+    addTo(v) {
+        this.#x += v.getX();
+        this.#y += v.getY();
+    }
+    subtractFrom(v) {
+        this.#x -= v.getX();
+        this.#y -= v.getY();
+    }
+    multiplyBy(s) {
+        this.#x *= s;
+        this.#y *= s;
+    }
+    divideBy(s) {
+        this.#x /= s;
+        this.#y /= s;
+    }
 }
 exports.default = Vector;
 
@@ -602,39 +696,18 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"iOjoF":[function(require,module,exports) {
+},{}],"7CeSo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _particle = require("./Particle");
 var _particleDefault = parcelHelpers.interopDefault(_particle);
-class Player extends (0, _particleDefault.default) {
-    constructor(x, y, radius, ctx){
-        super(x, y, radius, "white", ctx);
+class Projectile extends (0, _particleDefault.default) {
+    constructor(x, y, magnitude, direction, ctx){
+        super(x, y, magnitude, direction, 5, "white", ctx);
     }
 }
-exports.default = Player;
+exports.default = Projectile;
 
-},{"./Particle":"izY9t","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"izY9t":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _vector = require("./Vector");
-var _vectorDefault = parcelHelpers.interopDefault(_vector);
-class Particle {
-    constructor(x, y, radius, color, ctx){
-        this.position = new (0, _vectorDefault.default)(x, y);
-        this.radius = radius;
-        this.color = color;
-        this.ctx = ctx;
-    }
-    draw() {
-        this.ctx.beginPath();
-        this.ctx.fillStyle = this.color;
-        this.ctx.arc(this.position.getX(), this.position.getY(), this.radius, 0, Math.PI * 2, false);
-        this.ctx.fill();
-    }
-}
-exports.default = Particle;
-
-},{"./Vector":"cMjxv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7Z9ix","bNKaB"], "bNKaB", "parcelRequired253")
+},{"./Particle":"izY9t","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7Z9ix","bNKaB"], "bNKaB", "parcelRequired253")
 
 //# sourceMappingURL=index.0641b553.js.map
