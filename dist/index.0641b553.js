@@ -546,10 +546,16 @@ canvas.addEventListener("click", (e)=>{
 // * Timers
 function spawnEnemies() {
     console.log("New enemy spawned");
-    const enemyX = Math.random() * -canvas.width;
-    const enemyY = Math.random() * -canvas.height + canvas.height;
-    const enemyRadius = Math.floor(Math.random() * 25) + 10;
-    const enemySpeed = 0.5;
+    const enemyRadius = Math.floor(Math.random() * 25 + 5);
+    let enemyX, enemyY;
+    if (Math.random() < 0.5) {
+        enemyX = Math.random() < 0.5 ? 0 - enemyRadius : canvas.width + enemyRadius;
+        enemyY = Math.random() * canvas.height;
+    } else {
+        enemyX = Math.random() * canvas.width;
+        enemyY = Math.random() < 0.5 ? 0 - enemyRadius : canvas.height + enemyRadius;
+    }
+    const enemySpeed = 0.15;
     const enemyAngle = Math.atan2(canvas.height / 2 - enemyY, canvas.width / 2 - enemyX);
     const enemy = new (0, _enemyDefault.default)(enemyX, enemyY, enemySpeed, enemyAngle, enemyRadius, ctx);
     enemyArray.push(enemy);
@@ -564,9 +570,20 @@ function manageProjectiles() {
     });
 }
 function manageEnemies() {
-    enemyArray.forEach((enemy)=>{
+    enemyArray.forEach((enemy, enemyIdx)=>{
         enemy.update();
         enemy.draw();
+        projectileArray.forEach((projectile, projectileIdx)=>{
+            const dist = Math.hypot(projectile.position.getX() - enemy.position.getX(), projectile.position.getY() - enemy.position.getY());
+            // console.log(dist);
+            if (dist - projectile.radius - enemy.radius < 1) {
+                console.log("Hit");
+                setTimeout(()=>{
+                    enemyArray.splice(enemyIdx, 1);
+                    projectileArray.splice(projectileIdx, 1);
+                }, 0);
+            }
+        });
     });
 }
 // * Game loop
