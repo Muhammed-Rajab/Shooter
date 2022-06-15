@@ -73,11 +73,18 @@ canvas {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
+    transition: all 1.5s ease-in-out;
 }
 .end-score span {
     font-weight: 600;
 }
-.end-current-score {
-}
-.end-best-score {
+.restart-game-btn {
+    font-size: 1.15rem;
+    margin-top: 1rem;
+    padding: 10px 20px;
+    font-weight: 700;
+    background-color: greenyellow;
+    color: black;
+    border-radius: 4px;
+    border: none;
 }
