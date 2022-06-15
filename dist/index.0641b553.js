@@ -506,6 +506,8 @@ function hmrAcceptRun(bundle, id) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _hero = require("./modules/Hero");
 var _heroDefault = parcelHelpers.interopDefault(_hero);
+var _enemy = require("./modules/Enemy");
+var _enemyDefault = parcelHelpers.interopDefault(_enemy);
 var _vector = require("./modules/Vector");
 var _vectorDefault = parcelHelpers.interopDefault(_vector);
 var _particle = require("./modules/Particle");
@@ -522,7 +524,7 @@ const updateCanvasDimension = ()=>{
 };
 updateCanvasDimension();
 const clearCanvas = ()=>{
-    ctx.fillStyle = "rgb(18 18 18 / 30%)";
+    ctx.fillStyle = "rgb(18 18 18 / 50%)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 /*
@@ -541,11 +543,30 @@ canvas.addEventListener("click", (e)=>{
     const projectile = new (0, _projectileDefault.default)(projectileX, projectileY, 3, angleOfProjectile, ctx);
     projectileArray.push(projectile);
 });
+// * Timers
+function spawnEnemies() {
+    console.log("New enemy spawned");
+    const enemyX = Math.random() * -canvas.width;
+    const enemyY = Math.random() * -canvas.height + canvas.height;
+    const enemyRadius = Math.floor(Math.random() * 25) + 10;
+    const enemySpeed = 0.5;
+    const enemyAngle = Math.atan2(canvas.height / 2 - enemyY, canvas.width / 2 - enemyX);
+    const enemy = new (0, _enemyDefault.default)(enemyX, enemyY, enemySpeed, enemyAngle, enemyRadius, ctx);
+    enemyArray.push(enemy);
+    setTimeout(spawnEnemies, 1000);
+}
+spawnEnemies();
 // * Functions
 function manageProjectiles() {
     projectileArray.forEach((projectile)=>{
         projectile.update();
         projectile.draw();
+    });
+}
+function manageEnemies() {
+    enemyArray.forEach((enemy)=>{
+        enemy.update();
+        enemy.draw();
     });
 }
 // * Game loop
@@ -558,12 +579,13 @@ function gameLoop() {
     hero.update();
     // Drawing and Updating
     manageProjectiles();
+    manageEnemies();
     // Collision
     requestAnimationFrame(gameLoop);
 }
 gameLoop();
 
-},{"./modules/Hero":"iOjoF","./modules/Particle":"izY9t","./modules/Vector":"cMjxv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modules/Projectile":"7CeSo"}],"iOjoF":[function(require,module,exports) {
+},{"./modules/Hero":"iOjoF","./modules/Particle":"izY9t","./modules/Vector":"cMjxv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modules/Projectile":"7CeSo","./modules/Enemy":"3E3MV"}],"iOjoF":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _particle = require("./Particle");
@@ -707,6 +729,18 @@ class Projectile extends (0, _particleDefault.default) {
     }
 }
 exports.default = Projectile;
+
+},{"./Particle":"izY9t","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3E3MV":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _particle = require("./Particle");
+var _particleDefault = parcelHelpers.interopDefault(_particle);
+class Enemy extends (0, _particleDefault.default) {
+    constructor(x, y, magnitude, direction, radius, ctx){
+        super(x, y, magnitude, direction, radius, `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`, ctx);
+    }
+}
+exports.default = Enemy;
 
 },{"./Particle":"izY9t","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7Z9ix","bNKaB"], "bNKaB", "parcelRequired253")
 

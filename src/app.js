@@ -1,4 +1,5 @@
 import Hero from "./modules/Hero";
+import Enemy from "./modules/Enemy";
 import Vector from "./modules/Vector";
 import Particle from "./modules/Particle";
 import Projectile from "./modules/Projectile";
@@ -14,7 +15,7 @@ const updateCanvasDimension = () => {
 };
 updateCanvasDimension();
 const clearCanvas = () => {
-    ctx.fillStyle = "rgb(18 18 18 / 30%)";
+    ctx.fillStyle = "rgb(18 18 18 / 50%)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 
@@ -49,11 +50,44 @@ canvas.addEventListener("click", e => {
     projectileArray.push(projectile);
 });
 
+// * Timers
+function spawnEnemies() {
+    console.log("New enemy spawned");
+    const enemyX = Math.random() * -canvas.width;
+    const enemyY = Math.random() * -canvas.height + canvas.height;
+    const enemyRadius = Math.floor(Math.random() * 25) + 10;
+    const enemySpeed = 0.5;
+    const enemyAngle = Math.atan2(
+        canvas.height / 2 - enemyY,
+        canvas.width / 2 - enemyX
+    );
+
+    const enemy = new Enemy(
+        enemyX,
+        enemyY,
+        enemySpeed,
+        enemyAngle,
+        enemyRadius,
+        ctx
+    );
+    enemyArray.push(enemy);
+
+    setTimeout(spawnEnemies, 1000);
+}
+spawnEnemies();
+
 // * Functions
 function manageProjectiles() {
     projectileArray.forEach(projectile => {
         projectile.update();
         projectile.draw();
+    });
+}
+
+function manageEnemies() {
+    enemyArray.forEach(enemy => {
+        enemy.update();
+        enemy.draw();
     });
 }
 
@@ -70,6 +104,7 @@ function gameLoop() {
 
     // Drawing and Updating
     manageProjectiles();
+    manageEnemies();
 
     // Collision
     requestAnimationFrame(gameLoop);
