@@ -12,8 +12,7 @@ class App {
         this.ui = new UI();
 
         // * Elements
-        this.scoreText = document.querySelector(".score");
-        this.startGameBtn = document.querySelector(".start-game-btn");
+        this.restartBtn = document.querySelector(".restart-game-btn");
 
         // * Canvas Setup
         this.canvas = document.querySelector("#canvas");
@@ -42,10 +41,14 @@ class App {
         this.scoreObj = { score: 0 };
         this.hitScore = 40;
     }
-    #updateScore() {
-        this.scoreText.innerHTML = `Score: ${this.scoreObj.score}`;
+    #reset() {
+        this.scoreObj.score = 0;
+        this.hitScore = 40;
+        this.projectileGroup.reset();
+        this.particleGroup.reset();
+        this.enemyGroup.reset();
+        this.ui.updateScore(0);
     }
-
     #eventListenersInitialization() {
         /* Initializes Event listeners */
 
@@ -53,9 +56,15 @@ class App {
         this.canvas.addEventListener("click", e =>
             this.projectileGroup.spawnProjectile(e.clientX, e.clientY)
         );
-        this.startGameBtn.addEventListener("click", e => {
-            this.ui.hideStartScreen();
-            this.run();
+        document
+            .querySelector(".start-game-btn")
+            .addEventListener("click", e => {
+                this.ui.hideStartScreen();
+                this.run();
+            });
+        this.restartBtn.addEventListener("click", () => {
+            this.#reset();
+            this.ui.hideEndScreen();
         });
     }
     gameEnded() {
@@ -98,7 +107,7 @@ class App {
         this.particleGroup.manageParticles();
 
         // Update score
-        this.#updateScore();
+        this.ui.updateScore(this.scoreObj.score);
     }
 }
 

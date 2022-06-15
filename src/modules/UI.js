@@ -1,9 +1,19 @@
 export default class UI {
     constructor() {
+        // Screens
         this.startScreen = document.querySelector(".start-screen");
         this.endScreen = document.querySelector(".end-screen");
+
+        // End screen scores
         this.endBestScore = document.querySelector(".end-best-score");
         this.endCurrentScore = document.querySelector(".end-current-score");
+
+        // Game score
+        this.scoreText = document.querySelector(".score");
+    }
+
+    updateScore(score) {
+        this.scoreText.innerHTML = `Score: ${score}`;
     }
     getHighScore() {
         const highScore = localStorage.getItem("high-score");

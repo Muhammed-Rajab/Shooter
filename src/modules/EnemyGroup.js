@@ -6,6 +6,9 @@ export default class EnemyGroup {
         this.ctx = ctx;
         this.enemyArray = [];
     }
+    reset() {
+        this.enemyArray = [];
+    }
     getEnemiesArray() {
         // Returns enemyArray
         return this.enemyArray;

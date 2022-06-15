@@ -6,6 +6,9 @@ export default class ProjectileGroup {
         this.ctx = ctx;
         this.projectileArray = [];
     }
+    reset() {
+        this.projectileArray = [];
+    }
     getProjectilesArray() {
         // Returns the projectileArray
         return this.projectileArray;

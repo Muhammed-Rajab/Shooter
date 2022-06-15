@@ -16,7 +16,9 @@ export default class ParticleGroup {
         this.minParticleMagnitude = 0.5;
         this.maxParticleMagnitude = 3;
     }
-
+    reset() {
+        this.particleArray = [];
+    }
     getparticlesArray() {
         // Returns particleArray
         return this.particleArray;
