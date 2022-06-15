@@ -64,7 +64,12 @@ export default class EnemyGroup {
         );
         return dist - projectile.radius - enemy.radius < 1;
     }
-    manageEnemies(hero, projectilesArray, animationFrameRequestId) {
+    manageEnemies(
+        hero,
+        projectilesArray,
+        particleGroup,
+        animationFrameRequestId
+    ) {
         // Manage the enemies collision, shrinking and interaction with othehr  particles
 
         this.enemyArray.forEach((enemy, enemyIdx) => {
@@ -82,6 +87,8 @@ export default class EnemyGroup {
                 // If a projectile hits the enemy, then shrink the size of the enemy if it's big enough, else just remove the enemy from the array for next frame (using setTimeOut)
                 if (this._projectileHitsEnemy(projectile, enemy)) {
                     enemy.shrink();
+                    console.log("Projectile hit enemy");
+                    particleGroup.spawnParticle(projectile, enemy);
                     if (enemy.radius - enemy.shrinkVal <= enemy.shrinkVal) {
                         setTimeout(() => {
                             this.enemyArray.splice(enemyIdx, 1);

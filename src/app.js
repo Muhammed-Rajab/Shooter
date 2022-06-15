@@ -1,6 +1,7 @@
 import Hero from "./modules/Hero";
-import ProjectileGroup from "./modules/ProjectileGroup";
 import EnemyGroup from "./modules/EnemyGroup";
+import ParticleGroup from "./modules/ParticleGroup";
+import ProjectileGroup from "./modules/ProjectileGroup";
 import { clearCanvas, updateCanvasDimension } from "./modules/utils";
 
 /*----------------- Code Starts Here ------------------*/
@@ -22,6 +23,8 @@ class App {
         this.projectileGroup = new ProjectileGroup(this.canvas, this.ctx);
 
         this.enemyGroup = new EnemyGroup(this.canvas, this.ctx);
+
+        this.particleGroup = new ParticleGroup(this.canvas, this.ctx);
         // * Starts the enemy spawning loop
         this.enemyGroup.spawnNewEnemies();
 
@@ -65,8 +68,10 @@ class App {
         this.enemyGroup.manageEnemies(
             this.hero,
             this.projectileGroup.getProjectilesArray(),
+            this.particleGroup,
             this.animationFrameRequestId
         );
+        this.particleGroup.manageParticles();
     }
 }
 

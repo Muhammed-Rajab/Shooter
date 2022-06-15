@@ -10,10 +10,13 @@ export default class Particle {
         this.velocity = new Vector(0, 0);
         this.velocity.setLength(magnitude ?? 0);
         this.velocity.setAngleRad(direction ?? 0);
+        this.alpha = 1;
     }
 
     draw() {
         // Draws a circle
+        this.ctx.save();
+        this.ctx.globalAlpha = this.alpha;
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
         this.ctx.arc(
@@ -25,6 +28,7 @@ export default class Particle {
             false
         );
         this.ctx.fill();
+        this.ctx.restore();
     }
 
     update() {
