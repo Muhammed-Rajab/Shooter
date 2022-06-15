@@ -1,3 +1,4 @@
+import UI from "./modules/UI";
 import Hero from "./modules/Hero";
 import EnemyGroup from "./modules/EnemyGroup";
 import ParticleGroup from "./modules/ParticleGroup";
@@ -7,6 +8,9 @@ import { clearCanvas, updateCanvasDimension } from "./modules/utils";
 /*----------------- Code Starts Here ------------------*/
 class App {
     constructor() {
+        // * UI Handler
+        this.ui = new UI();
+
         // * Elements
         this.scoreText = document.querySelector(".score");
         // * Canvas Setup
@@ -53,6 +57,7 @@ class App {
     gameEnded() {
         // Sets the hitScore to 0 and makes the hero explode while showing the end screen with score
         this.hitScore = 0;
+        this.ui.showEndScreen(this.scoreObj.score);
     }
 
     run() {

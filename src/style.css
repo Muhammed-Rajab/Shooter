@@ -96,7 +96,7 @@ canvas {
 /* Start game screen */
 .start-screen {
     position: absolute;
-    display: flex;
+    display: none;
     top: 0;
     left: 0;
     z-index: 1000;
