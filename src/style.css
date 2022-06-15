@@ -92,11 +92,27 @@ canvas {
     border-radius: 3px;
     border: none;
 }
+/* Counter */
+.counter {
+    position: absolute;
+    display: flex;
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    color: white;
+    font-size: 10rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-weight: 800;
+}
 
 /* Start game screen */
 .start-screen {
     position: absolute;
-    display: none;
+    display: flex;
     top: 0;
     left: 0;
     z-index: 1000;

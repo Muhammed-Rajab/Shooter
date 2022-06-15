@@ -13,6 +13,8 @@ class App {
 
         // * Elements
         this.scoreText = document.querySelector(".score");
+        this.startGameBtn = document.querySelector(".start-game-btn");
+
         // * Canvas Setup
         this.canvas = document.querySelector("#canvas");
         this.ctx = canvas.getContext("2d");
@@ -31,8 +33,6 @@ class App {
         this.enemyGroup = new EnemyGroup(this.canvas, this.ctx);
 
         this.particleGroup = new ParticleGroup(this.canvas, this.ctx);
-        // * Starts the enemy spawning loop
-        this.enemyGroup.spawnNewEnemies();
 
         // * Initialize Eventlisteners
         this.#eventListenersInitialization();
@@ -53,6 +53,10 @@ class App {
         this.canvas.addEventListener("click", e =>
             this.projectileGroup.spawnProjectile(e.clientX, e.clientY)
         );
+        this.startGameBtn.addEventListener("click", e => {
+            this.ui.hideStartScreen();
+            this.run();
+        });
     }
     gameEnded() {
         // Sets the hitScore to 0 and makes the hero explode while showing the end screen with score
@@ -62,6 +66,9 @@ class App {
 
     run() {
         /* Method to start game loop */
+
+        // * Starts the enemy spawning loop
+        this.enemyGroup.spawnNewEnemies();
         this.#loop();
     }
 
@@ -98,4 +105,4 @@ class App {
 const game = new App();
 
 // Starts the game loop
-game.run();
+// game.run();
