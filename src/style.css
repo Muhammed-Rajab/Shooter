@@ -35,11 +35,28 @@ canvas {
     left: 0;
     color: white;
     z-index: 100;
-    margin: 10px 15px;
+    margin: 20px 15px;
     font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.5rem;
 }
+
 .score {
     font-size: 1.25rem;
+}
+.home-score-btn {
+    width: 28px;
+    height: 28px;
+    background: white;
+    /* color: whitesmoke; */
+    border: none;
+    padding: 3px;
+    border-radius: 3px;
+}
+.home-score-btn:hover {
+    background: rgb(181, 181, 181);
 }
 .credits {
     position: absolute;
