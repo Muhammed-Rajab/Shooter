@@ -69,7 +69,8 @@ export default class EnemyGroup {
         projectilesArray,
         particleGroup,
         scoreObj,
-        animationFrameRequestId
+        hitScore,
+        onGameEnd
     ) {
         // Manage the enemies collision, shrinking and interaction with othehr  particles
 
@@ -80,8 +81,7 @@ export default class EnemyGroup {
 
             // Exits the loop if an enemy hits the hero
             if (this._enemyHitsHero(hero, enemy)) {
-                console.log("Hit the player");
-                cancelAnimationFrame(animationFrameRequestId);
+                onGameEnd();
             }
 
             projectilesArray.forEach((projectile, projectileIdx) => {
@@ -102,7 +102,7 @@ export default class EnemyGroup {
                     }
 
                     // Updates the score
-                    scoreObj.score += 40;
+                    scoreObj.score += hitScore;
                 }
             });
         });

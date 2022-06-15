@@ -36,6 +36,7 @@ class App {
         // * Game configs and properties
         this.animationFrameRequestId = undefined;
         this.scoreObj = { score: 0 };
+        this.hitScore = 40;
     }
     #updateScore() {
         this.scoreText.innerHTML = `Score: ${this.scoreObj.score}`;
@@ -48,6 +49,10 @@ class App {
         this.canvas.addEventListener("click", e =>
             this.projectileGroup.spawnProjectile(e.clientX, e.clientY)
         );
+    }
+    gameEnded() {
+        // Sets the hitScore to 0 and makes the hero explode while showing the end screen with score
+        this.hitScore = 0;
     }
 
     run() {
@@ -75,7 +80,8 @@ class App {
             this.projectileGroup.getProjectilesArray(),
             this.particleGroup,
             this.scoreObj,
-            this.animationFrameRequestId
+            this.hitScore,
+            this.gameEnded.bind(this)
         );
         this.particleGroup.manageParticles();
 
