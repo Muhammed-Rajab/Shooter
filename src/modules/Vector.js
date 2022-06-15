@@ -1,6 +1,9 @@
 export default class Vector {
     #x;
     #y;
+    /*
+        A full-on module with necessary methods to handle vectors
+    */
     constructor(x, y) {
         this.#x = x;
         this.#y = y;

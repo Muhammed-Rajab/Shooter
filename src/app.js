@@ -22,6 +22,7 @@ class App {
         this.projectileGroup = new ProjectileGroup(this.canvas, this.ctx);
 
         this.enemyGroup = new EnemyGroup(this.canvas, this.ctx);
+        // * Starts the enemy spawning loop
         this.enemyGroup.spawnNewEnemies();
 
         // * Initialize Eventlisteners
@@ -29,28 +30,34 @@ class App {
 
         // * Game configs and properties
         this.animationFrameRequestId = undefined;
+        this.score = 0;
     }
+
     #eventListenersInitialization() {
-        // * Event listeners
+        /* Initializes Event listeners */
+
+        // Shoots projectile on click to a specific direction
         this.canvas.addEventListener("click", e =>
             this.projectileGroup.spawnProjectile(e.clientX, e.clientY)
         );
     }
+
     run() {
-        this._loop();
+        /* Method to start game loop */
+        this.#loop();
     }
-    _loop() {
+
+    #loop() {
+        // Storing animationRequestId for stoping loop
         this.animationFrameRequestId = requestAnimationFrame(
-            this._loop.bind(this)
+            this.#loop.bind(this)
         );
 
-        // Clearing
+        // Clearing canvas
         clearCanvas(this.canvas, this.ctx);
 
-        // Drawing
+        // Drawing and updating hero
         this.hero.draw();
-
-        // Updating
         this.hero.update();
 
         // Managing Groups
@@ -64,4 +71,6 @@ class App {
 }
 
 const game = new App();
+
+// Starts the game loop
 game.run();

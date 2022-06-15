@@ -7,15 +7,18 @@ export default class ProjectileGroup {
         this.projectileArray = [];
     }
     getProjectilesArray() {
+        // Returns the projectileArray
         return this.projectileArray;
     }
     manageProjectiles() {
+        // Draws and updates the projectile
         this.projectileArray.forEach(projectile => {
             projectile.update();
             projectile.draw();
         });
     }
     spawnProjectile(mouseX, mouseY) {
+        // Event listener callback to generate projectile on mouse click
         const projectileX = this.canvas.width / 2;
         const projectileY = this.canvas.height / 2;
 
