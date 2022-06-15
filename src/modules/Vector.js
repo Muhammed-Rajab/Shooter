@@ -30,6 +30,12 @@ export default class Vector {
     setY(y) {
         this.#y = y;
     }
+    set setX_(x) {
+        this.#x = x;
+    }
+    set setY_(y) {
+        this.#y = y;
+    }
     setAngleRad(rad) {
         const length = this.getLength();
         this.#x = length * Math.cos(rad);

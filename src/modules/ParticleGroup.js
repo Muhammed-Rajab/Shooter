@@ -1,5 +1,6 @@
 import gsap from "gsap";
 import Particle from "./Particle";
+import Vector from "./Vector";
 
 export default class ParticleGroup {
     constructor(canvas, ctx) {
@@ -10,7 +11,8 @@ export default class ParticleGroup {
         // Explode particle property
         this.minParticleSize = 0.5;
         this.maxParticleSize = 3.5;
-        this.particleCount = 8;
+        this.minParticleCount = 1;
+        this.maxParticleCount = 5;
         this.minParticleMagnitude = 0.5;
         this.maxParticleMagnitude = 3;
     }
@@ -22,7 +24,17 @@ export default class ParticleGroup {
 
     spawnParticle(projectile, enemy) {
         // Spawns new particle with respect to our projectile and pushes them to array to render
-        for (let i = 0; i < this.particleCount; i++) {
+        for (
+            let i = 0;
+            i <
+            Math.floor(
+                Math.random() *
+                    (this.maxParticleCount - this.minParticleCount) +
+                    this.minParticleCount
+            ) *
+                enemy.radius;
+            i++
+        ) {
             const p = new Particle(
                 projectile.position.getX(),
                 projectile.position.getY(),
