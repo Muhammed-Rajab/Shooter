@@ -2,6 +2,7 @@ import Vector from "./Vector";
 
 export default class Particle {
     constructor(x, y, magnitude, direction, radius, color, ctx) {
+        // Particle properties
         this.position = new Vector(x, y);
         this.radius = radius;
         this.color = color;
@@ -12,6 +13,7 @@ export default class Particle {
     }
 
     draw() {
+        // Draws a circle
         this.ctx.beginPath();
         this.ctx.fillStyle = this.color;
         this.ctx.arc(
@@ -26,6 +28,7 @@ export default class Particle {
     }
 
     update() {
+        // Updates the position by adding a velocity to it
         this.position.addTo(this.velocity);
     }
 }
