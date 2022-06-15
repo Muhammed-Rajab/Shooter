@@ -506,112 +506,51 @@ function hmrAcceptRun(bundle, id) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _hero = require("./modules/Hero");
 var _heroDefault = parcelHelpers.interopDefault(_hero);
-var _enemy = require("./modules/Enemy");
-var _enemyDefault = parcelHelpers.interopDefault(_enemy);
-var _vector = require("./modules/Vector");
-var _vectorDefault = parcelHelpers.interopDefault(_vector);
-var _particle = require("./modules/Particle");
-var _particleDefault = parcelHelpers.interopDefault(_particle);
-var _projectile = require("./modules/Projectile");
-var _projectileDefault = parcelHelpers.interopDefault(_projectile);
-// * Canvas Setup
-const canvas = document.querySelector("#canvas");
-const ctx = canvas.getContext("2d");
-// * Helper functions
-const updateCanvasDimension = ()=>{
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-};
-updateCanvasDimension();
-const clearCanvas = ()=>{
-    ctx.fillStyle = "rgb(18 18 18 / 50%)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-};
-/*
- * ----------------- Code Starts Here ------------------
- */ // * Variables
-const hero = new (0, _heroDefault.default)(canvas.width / 2, canvas.height / 2, 25, ctx);
-const projectileArray = [];
-const enemyArray = [];
-// * Event listeners
-canvas.addEventListener("click", (e)=>{
-    const { clientX: mouseX , clientY: mouseY  } = e;
-    const projectileX = canvas.width / 2;
-    const projectileY = canvas.height / 2;
-    const angleOfProjectile = Math.atan2(mouseY - projectileY, mouseX - projectileX);
-    console.log(angleOfProjectile * (180 / Math.PI));
-    const projectile = new (0, _projectileDefault.default)(projectileX, projectileY, 3, angleOfProjectile, ctx);
-    projectileArray.push(projectile);
-});
-// * Timers
-function spawnEnemies() {
-    console.log("New enemy spawned");
-    const enemyRadius = Math.floor(Math.random() * 25 + 5);
-    let enemyX, enemyY;
-    if (Math.random() < 0.5) {
-        enemyX = Math.random() < 0.5 ? 0 - enemyRadius : canvas.width + enemyRadius;
-        enemyY = Math.random() * canvas.height;
-    } else {
-        enemyX = Math.random() * canvas.width;
-        enemyY = Math.random() < 0.5 ? 0 - enemyRadius : canvas.height + enemyRadius;
+var _projectileGroup = require("./modules/ProjectileGroup");
+var _projectileGroupDefault = parcelHelpers.interopDefault(_projectileGroup);
+var _enemyGroup = require("./modules/EnemyGroup");
+var _enemyGroupDefault = parcelHelpers.interopDefault(_enemyGroup);
+var _utils = require("./modules/utils");
+/*----------------- Code Starts Here ------------------*/ class App {
+    constructor(){
+        // * Canvas Setup
+        this.canvas = document.querySelector("#canvas");
+        this.ctx = canvas.getContext("2d");
+        (0, _utils.updateCanvasDimension)(this.canvas);
+        // * Objects
+        this.hero = new (0, _heroDefault.default)(this.canvas.width / 2, this.canvas.height / 2, 25, this.ctx);
+        this.projectileGroup = new (0, _projectileGroupDefault.default)(this.canvas, this.ctx);
+        this.enemyGroup = new (0, _enemyGroupDefault.default)(this.canvas, this.ctx);
+        this.enemyGroup.spawnNewEnemies();
+        // * Initialize Eventlisteners
+        this.#eventListenersInitialization();
+        // * Game configs and properties
+        this.animationFrameRequestId = undefined;
     }
-    const enemySpeed = 0.5;
-    const enemyAngle = Math.atan2(canvas.height / 2 - enemyY, canvas.width / 2 - enemyX);
-    const enemy = new (0, _enemyDefault.default)(enemyX, enemyY, enemySpeed, enemyAngle, enemyRadius, ctx);
-    enemyArray.push(enemy);
-    setTimeout(spawnEnemies, 1000);
+     #eventListenersInitialization() {
+        // * Event listeners
+        this.canvas.addEventListener("click", (e)=>this.projectileGroup.spawnProjectile(e.clientX, e.clientY));
+    }
+    run() {
+        this._loop();
+    }
+    _loop() {
+        this.animationFrameRequestId = requestAnimationFrame(this._loop.bind(this));
+        // Clearing
+        (0, _utils.clearCanvas)(this.canvas, this.ctx);
+        // Drawing
+        this.hero.draw();
+        // Updating
+        this.hero.update();
+        // Managing Groups
+        this.projectileGroup.manageProjectiles();
+        this.enemyGroup.manageEnemies(this.hero, this.projectileGroup.getProjectilesArray(), this.animationFrameRequestId);
+    }
 }
-spawnEnemies();
-// * Functions
-function manageProjectiles() {
-    projectileArray.forEach((projectile)=>{
-        projectile.update();
-        projectile.draw();
-    });
-}
-function enemyHitHero(enemy) {
-    const dist = Math.hypot(hero.position.getX() - enemy.position.getX(), hero.position.getY() - enemy.position.getY());
-    return dist - hero.radius - enemy.radius < 1;
-}
-function manageEnemies() {
-    enemyArray.forEach((enemy, enemyIdx)=>{
-        enemy.update();
-        enemy.draw();
-        if (enemyHitHero(enemy)) {
-            console.log("Hit the player");
-            cancelAnimationFrame(animationFrameRequestId);
-        }
-        projectileArray.forEach((projectile, projectileIdx)=>{
-            const dist = Math.hypot(projectile.position.getX() - enemy.position.getX(), projectile.position.getY() - enemy.position.getY());
-            // console.log(dist);
-            if (dist - projectile.radius - enemy.radius < 1) {
-                console.log("Hit");
-                setTimeout(()=>{
-                    enemyArray.splice(enemyIdx, 1);
-                    projectileArray.splice(projectileIdx, 1);
-                }, 0);
-            }
-        });
-    });
-}
-// * Game loop
-let animationFrameRequestId = undefined;
-function gameLoop() {
-    animationFrameRequestId = requestAnimationFrame(gameLoop);
-    // Clearing
-    clearCanvas();
-    // Drawing
-    hero.draw();
-    // Updating
-    hero.update();
-    // Drawing and Updating
-    manageProjectiles();
-    manageEnemies();
-// Collision
-}
-gameLoop();
+const game = new App();
+game.run();
 
-},{"./modules/Hero":"iOjoF","./modules/Particle":"izY9t","./modules/Vector":"cMjxv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modules/Projectile":"7CeSo","./modules/Enemy":"3E3MV"}],"iOjoF":[function(require,module,exports) {
+},{"./modules/Hero":"iOjoF","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./modules/utils":"hA2Bv","./modules/ProjectileGroup":"64V30","./modules/EnemyGroup":"bk19o"}],"iOjoF":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _particle = require("./Particle");
@@ -744,7 +683,53 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"7CeSo":[function(require,module,exports) {
+},{}],"hA2Bv":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "updateCanvasDimension", ()=>updateCanvasDimension);
+parcelHelpers.export(exports, "clearCanvas", ()=>clearCanvas);
+// * Helper functions
+const updateCanvasDimension = (canvas)=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+};
+const clearCanvas = (canvas, ctx)=>{
+    ctx.fillStyle = "rgb(0 0 0 / 10%)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"64V30":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _projectile = require("./Projectile");
+var _projectileDefault = parcelHelpers.interopDefault(_projectile);
+class ProjectileGroup {
+    constructor(canvas, ctx){
+        this.canvas = canvas;
+        this.ctx = ctx;
+        this.projectileArray = [];
+    }
+    getProjectilesArray() {
+        return this.projectileArray;
+    }
+    manageProjectiles() {
+        this.projectileArray.forEach((projectile)=>{
+            projectile.update();
+            projectile.draw();
+        });
+    }
+    spawnProjectile(mouseX, mouseY) {
+        const projectileX = this.canvas.width / 2;
+        const projectileY = this.canvas.height / 2;
+        const angleOfProjectile = Math.atan2(mouseY - projectileY, mouseX - projectileX);
+        console.log(angleOfProjectile * (180 / Math.PI));
+        const projectile = new (0, _projectileDefault.default)(projectileX, projectileY, 3, angleOfProjectile, this.ctx);
+        this.projectileArray.push(projectile);
+    }
+}
+exports.default = ProjectileGroup;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Projectile":"7CeSo"}],"7CeSo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _particle = require("./Particle");
@@ -756,7 +741,68 @@ class Projectile extends (0, _particleDefault.default) {
 }
 exports.default = Projectile;
 
-},{"./Particle":"izY9t","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3E3MV":[function(require,module,exports) {
+},{"./Particle":"izY9t","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bk19o":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _enemy = require("./Enemy");
+var _enemyDefault = parcelHelpers.interopDefault(_enemy);
+class EnemyGroup {
+    constructor(canvas, ctx){
+        this.canvas = canvas;
+        this.ctx = ctx;
+        this.enemyArray = [];
+    }
+    getEnemiesArray() {
+        return this.enemyArray;
+    }
+    spawnNewEnemies() {
+        console.log("New enemy spawned");
+        const enemyRadius = Math.floor(Math.random() * 25 + 5);
+        let enemyX, enemyY;
+        if (Math.random() < 0.5) {
+            enemyX = Math.random() < 0.5 ? 0 - enemyRadius : canvas.width + enemyRadius;
+            enemyY = Math.random() * canvas.height;
+        } else {
+            enemyX = Math.random() * canvas.width;
+            enemyY = Math.random() < 0.5 ? 0 - enemyRadius : canvas.height + enemyRadius;
+        }
+        const enemySpeed = 0.5;
+        const enemyAngle = Math.atan2(canvas.height / 2 - enemyY, canvas.width / 2 - enemyX);
+        const enemy = new (0, _enemyDefault.default)(enemyX, enemyY, enemySpeed, enemyAngle, enemyRadius, this.ctx);
+        this.enemyArray.push(enemy);
+        setTimeout(this.spawnNewEnemies.bind(this), 1000);
+    }
+    _enemyHitsHero(hero, enemy) {
+        const dist = Math.hypot(hero.position.getX() - enemy.position.getX(), hero.position.getY() - enemy.position.getY());
+        return dist - hero.radius - enemy.radius < 1;
+    }
+    _projectileHitsEnemy(projectile, enemy) {
+        const dist = Math.hypot(projectile.position.getX() - enemy.position.getX(), projectile.position.getY() - enemy.position.getY());
+        return dist - projectile.radius - enemy.radius < 1;
+    }
+    manageEnemies(hero, projectilesArray, animationFrameRequestId) {
+        this.enemyArray.forEach((enemy, enemyIdx)=>{
+            enemy.update();
+            enemy.draw();
+            if (this._enemyHitsHero(hero, enemy)) {
+                console.log("Hit the player");
+                cancelAnimationFrame(animationFrameRequestId);
+            }
+            projectilesArray.forEach((projectile, projectileIdx)=>{
+                if (this._projectileHitsEnemy(projectile, enemy)) {
+                    console.log("Hit");
+                    setTimeout(()=>{
+                        this.enemyArray.splice(enemyIdx, 1);
+                        projectilesArray.splice(projectileIdx, 1);
+                    }, 0);
+                }
+            });
+        });
+    }
+}
+exports.default = EnemyGroup;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Enemy":"3E3MV"}],"3E3MV":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _particle = require("./Particle");
