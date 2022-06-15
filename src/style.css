@@ -1,9 +1,31 @@
 * {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+}
+body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-family: "Courier New", Courier, monospace;
+    font-weight: 700;
 }
 canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.score-board {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    z-index: 100;
+    margin: 10px 15px;
+}
+.score {
+    font-size: 1.25rem;
 }

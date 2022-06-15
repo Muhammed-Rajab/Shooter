@@ -68,6 +68,7 @@ export default class EnemyGroup {
         hero,
         projectilesArray,
         particleGroup,
+        scoreObj,
         animationFrameRequestId
     ) {
         // Manage the enemies collision, shrinking and interaction with othehr  particles
@@ -99,6 +100,9 @@ export default class EnemyGroup {
                             projectilesArray.splice(projectileIdx, 1);
                         }, 0);
                     }
+
+                    // Updates the score
+                    scoreObj.score += 40;
                 }
             });
         });

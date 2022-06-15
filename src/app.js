@@ -7,6 +7,8 @@ import { clearCanvas, updateCanvasDimension } from "./modules/utils";
 /*----------------- Code Starts Here ------------------*/
 class App {
     constructor() {
+        // * Elements
+        this.scoreText = document.querySelector(".score");
         // * Canvas Setup
         this.canvas = document.querySelector("#canvas");
         this.ctx = canvas.getContext("2d");
@@ -33,7 +35,10 @@ class App {
 
         // * Game configs and properties
         this.animationFrameRequestId = undefined;
-        this.score = 0;
+        this.scoreObj = { score: 0 };
+    }
+    #updateScore() {
+        this.scoreText.innerHTML = `Score: ${this.scoreObj.score}`;
     }
 
     #eventListenersInitialization() {
@@ -69,9 +74,13 @@ class App {
             this.hero,
             this.projectileGroup.getProjectilesArray(),
             this.particleGroup,
+            this.scoreObj,
             this.animationFrameRequestId
         );
         this.particleGroup.manageParticles();
+
+        // Update score
+        this.#updateScore();
     }
 }
 
