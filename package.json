@@ -12,6 +12,7 @@
     "parcel": "^2.6.0"
   },
   "dependencies": {
-    "gsap": "^3.10.4"
+    "gsap": "^3.10.4",
+    "howler": "^2.2.3"
   }
 }

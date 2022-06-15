@@ -83,13 +83,27 @@ canvas {
 .end-score span {
     font-weight: 600;
 }
+.end-button-wrapper {
+    display: flex;
+    column-gap: 1rem;
+}
+.home-game-btn {
+    font-size: 1.15rem;
+    margin-top: 1rem;
+    padding: 10px 40px;
+    font-weight: 700;
+    background-color: rgb(0, 195, 255);
+    color: rgb(0, 58, 76);
+    border-radius: 3px;
+    border: none;
+}
 .restart-game-btn {
     font-size: 1.15rem;
     margin-top: 1rem;
     padding: 10px 40px;
     font-weight: 700;
     background-color: greenyellow;
-    color: black;
+    color: rgb(1, 59, 3);
     border-radius: 3px;
     border: none;
 }
@@ -146,7 +160,7 @@ canvas {
     padding: 10px 20px;
     font-weight: 700;
     background-color: rgb(0, 195, 255);
-    color: white;
+    color: rgb(0, 58, 76);
     border-radius: 3 px;
     border: none;
     transition: transform 0.1s ease-in-out;
