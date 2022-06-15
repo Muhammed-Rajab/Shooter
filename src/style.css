@@ -16,6 +16,7 @@ body {
     user-select: none;
     /* font-family: "Courier New", Courier, monospace; */
     font-family: "Montserrat", sans-serif;
+    background: #000;
 }
 a {
     color: red;
@@ -133,7 +134,7 @@ canvas {
     font-size: 6rem;
     font-weight: 800;
     text-transform: uppercase;
-    transition: all 1s ease-in-out;
+    animation-delay: 1s;
 }
 .start-game-desc {
     font-size: 1.1rem;
@@ -148,4 +149,8 @@ canvas {
     color: white;
     border-radius: 3 px;
     border: none;
+    transition: transform 0.1s ease-in-out;
+}
+.start-game-btn:hover {
+    transform: scale(1.05);
 }
