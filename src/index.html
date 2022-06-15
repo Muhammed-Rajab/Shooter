@@ -5,6 +5,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Shooter</title>
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        />
         <link rel="stylesheet" href="./style.css" />
         <script src="./app.js" type="module"></script>
     </head>
@@ -22,7 +27,11 @@
         <div class="start-screen">
             <div class="start-screen-message">
                 <header class="start-header">
-                    <span class="start-game-title">🔥Shooter🔥</span>
+                    <h1
+                        class="animate__animated animate__bounce start-game-title"
+                    >
+                        🔥Shooter🔥
+                    </h1>
                     <p class="start-game-desc">
                         You got good reflex, Huh? Let's see 😏
                     </p>
@@ -44,9 +53,11 @@
         </div>
 
         <!-- End screen -->
-        <div class="end-screen">
+        <div class="animate__animated animate__fadeIn end-screen">
             <div class="end-screen-message">
-                <span class="end-message">The End</span>
+                <span class="animate__animated animate__zoomIn end-message"
+                    >The End</span
+                >
                 <div class="end-score">
                     <span class="end-best-score">🏆Best Score: 1260</span>
                     <span class="end-current-score">👍New Score: 1000</span>
