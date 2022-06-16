@@ -2,6 +2,7 @@ import UI from "./modules/UI";
 import Hero from "./modules/Hero";
 import EnemyGroup from "./modules/EnemyGroup";
 import ParticleGroup from "./modules/ParticleGroup";
+import ScoreTextGroup from "./modules/ScoreTextGroup";
 import ProjectileGroup from "./modules/ProjectileGroup";
 import { clearCanvas, updateCanvasDimension } from "./modules/utils";
 
@@ -34,6 +35,8 @@ class App {
         this.enemyGroup = new EnemyGroup(this.canvas, this.ctx);
 
         this.particleGroup = new ParticleGroup(this.canvas, this.ctx);
+
+        this.scoreTextGroup = new ScoreTextGroup(this.canvas, this.ctx);
 
         // * Initialize Eventlisteners
         this.#eventListenersInitialization();
@@ -116,9 +119,11 @@ class App {
             this.particleGroup,
             this.scoreObj,
             this.hitScore,
-            this.gameEnded.bind(this)
+            this.gameEnded.bind(this),
+            this.scoreTextGroup
         );
         this.particleGroup.manageParticles();
+        this.scoreTextGroup.manageScoreTexts();
 
         // Update score
         this.ui.updateScore(this.scoreObj.score);

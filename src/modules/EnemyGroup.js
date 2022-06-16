@@ -77,7 +77,8 @@ export default class EnemyGroup {
         particleGroup,
         scoreObj,
         hitScore,
-        onGameEnd
+        onGameEnd,
+        scoreTextGroup
     ) {
         // Manage the enemies collision, shrinking and interaction with othehr  particles
 
@@ -95,7 +96,11 @@ export default class EnemyGroup {
                 // If a projectile hits the enemy, then shrink the size of the enemy if it's big enough, else just remove the enemy from the array for next frame (using setTimeOut)
                 if (this._projectileHitsEnemy(projectile, enemy)) {
                     enemy.shrink();
-                    console.log("Projectile hit enemy");
+                    scoreTextGroup.addScoreText(
+                        projectile.position.getX(),
+                        projectile.position.getY(),
+                        hitScore
+                    );
                     particleGroup.spawnParticle(projectile, enemy);
                     if (enemy.radius - enemy.shrinkVal <= enemy.shrinkVal) {
                         setTimeout(() => {
