@@ -29,7 +29,7 @@ export default class ProjectileGroup {
             mouseY - projectileY,
             mouseX - projectileX
         );
-        console.log(angleOfProjectile * (180 / Math.PI));
+
         const projectile = new Projectile(
             projectileX,
             projectileY,
