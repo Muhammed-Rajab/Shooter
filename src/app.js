@@ -13,6 +13,8 @@ class App {
 
         // * Elements
         this.restartBtn = document.querySelector(".restart-game-btn");
+        this.homeEndButton = document.querySelector(".home-game-btn");
+        this.homeScoreButton = document.querySelector(".home-score-btn");
 
         // * Canvas Setup
         this.canvas = document.querySelector("#canvas");
@@ -64,7 +66,19 @@ class App {
             });
         this.restartBtn.addEventListener("click", () => {
             this.#reset();
+            this.enemyGroup.spawnNewEnemies();
             this.ui.hideEndScreen();
+        });
+        this.homeEndButton.addEventListener("click", () => {
+            cancelAnimationFrame(this.animationFrameRequestId);
+            this.#reset();
+            this.ui.hideEndScreen();
+            this.ui.showStartScreen();
+        });
+        this.homeScoreButton.addEventListener("click", () => {
+            cancelAnimationFrame(this.animationFrameRequestId);
+            this.#reset();
+            this.ui.showStartScreen();
         });
     }
     gameEnded() {

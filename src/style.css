@@ -113,6 +113,16 @@ canvas {
     color: rgb(0, 58, 76);
     border-radius: 3px;
     border: none;
+    display: flex;
+    column-gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+.home-game-btn svg {
+    width: 20px;
+}
+.home-game-btn path {
+    fill: rgb(0, 58, 76);
 }
 .restart-game-btn {
     font-size: 1.15rem;
@@ -123,6 +133,16 @@ canvas {
     color: rgb(1, 59, 3);
     border-radius: 3px;
     border: none;
+    display: flex;
+    column-gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+.restart-game-btn svg {
+    width: 20px;
+}
+.restart-game-btn path {
+    fill: rgb(1, 59, 3);
 }
 /* Counter */
 .counter {
@@ -158,6 +178,9 @@ canvas {
 }
 .start-screen-message {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .start-header {
 }
@@ -181,7 +204,19 @@ canvas {
     border-radius: 3 px;
     border: none;
     transition: transform 0.1s ease-in-out;
+    display: flex;
+    column-gap: 0.5rem;
+    width: fit-content;
 }
-.start-game-btn:hover {
+.start-game-btn svg {
+    width: 16px;
+}
+.start-game-btn path {
+    fill: rgb(0, 58, 76);
+}
+button {
+    transition: transform 0.1s ease-in-out;
+}
+button:hover {
     transform: scale(1.05);
 }
