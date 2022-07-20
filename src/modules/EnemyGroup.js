@@ -18,41 +18,42 @@ export default class EnemyGroup {
         // A loop to spawn enemy every 1000 milliseconds
 
         // setTimeout(this.spawnNewEnemies.bind(this), 1000);
-
         this.enemySpawnIntervalId = setInterval(() => {
-            const enemyRadius = Math.floor(Math.random() * (30 - 5) + 5);
+            if (!document.hidden) {
+                const enemyRadius = Math.floor(Math.random() * (30 - 5) + 5);
 
-            let enemyX, enemyY;
+                let enemyX, enemyY;
 
-            if (Math.random() < 0.5) {
-                enemyX =
-                    Math.random() < 0.5
-                        ? 0 - enemyRadius
-                        : canvas.width + enemyRadius;
-                enemyY = Math.random() * canvas.height;
-            } else {
-                enemyX = Math.random() * canvas.width;
-                enemyY =
-                    Math.random() < 0.5
-                        ? 0 - enemyRadius
-                        : canvas.height + enemyRadius;
+                if (Math.random() < 0.5) {
+                    enemyX =
+                        Math.random() < 0.5
+                            ? 0 - enemyRadius
+                            : canvas.width + enemyRadius;
+                    enemyY = Math.random() * canvas.height;
+                } else {
+                    enemyX = Math.random() * canvas.width;
+                    enemyY =
+                        Math.random() < 0.5
+                            ? 0 - enemyRadius
+                            : canvas.height + enemyRadius;
+                }
+
+                const enemySpeed = 0.5;
+                const enemyAngle = Math.atan2(
+                    canvas.height / 2 - enemyY,
+                    canvas.width / 2 - enemyX
+                );
+
+                const enemy = new Enemy(
+                    enemyX,
+                    enemyY,
+                    enemySpeed,
+                    enemyAngle,
+                    enemyRadius,
+                    this.ctx
+                );
+                this.enemyArray.push(enemy);
             }
-
-            const enemySpeed = 0.5;
-            const enemyAngle = Math.atan2(
-                canvas.height / 2 - enemyY,
-                canvas.width / 2 - enemyX
-            );
-
-            const enemy = new Enemy(
-                enemyX,
-                enemyY,
-                enemySpeed,
-                enemyAngle,
-                enemyRadius,
-                this.ctx
-            );
-            this.enemyArray.push(enemy);
         }, 1000);
     }
     _enemyHitsHero(hero, enemy) {
